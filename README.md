@@ -37,7 +37,7 @@ Sistema desktop intuitivo e de alta performance voltado para pequenas empresas, 
 Substitua o endereço abaixo pela URL real do repositório:
 
 ```bash
-git clone https://github.com/luisa-moura/Orby.git
+git clone https://github.com/luisa-moura/Orby-OS-Platform.git
 cd Orby
 ```
 
