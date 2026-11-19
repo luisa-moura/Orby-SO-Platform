@@ -1,138 +1,121 @@
 # Orby — Gestão Operacional para Pequenas Empresas e Serviços
 
-Sistema desktop intuitivo e de alta performance voltado para pequenas empresas, prestadores de serviços e assistências técnicas. O sistema conta com controle completo de clientes, equipamentos e ordens de serviço (OS), além de autenticação com controle de acesso baseado em perfis (RBAC), importação em lote e interface gráfica moderna no estilo Frutiger Aero.
+Sistema desktop intuitivo e de alta performance voltado para pequenas empresas, prestadores de serviços e assistências técnicas. O sistema conta com controle completo de clientes, equipamentos e ordens de serviço (OS), painel financeiro, emissão de comprovantes e relatórios em PDF/CSV, rotinas de backup/restauração, autenticação segura (`scrypt`) com controle de acesso baseado em perfis (RBAC), importação em lote e interface gráfica moderna no estilo Frutiger Aero.
+
+---
 
 ## Funcionalidades
 
-- Autenticação & Controle de Acesso (RBAC):
-  - Gestor: Acesso irrestrito (dashboard financeiro, clientes, equipamentos, OS e importação).
-  - Técnico: Acesso operacional focado em ordens de serviço, andamentos, laudos e equipamentos.
-  - Atendente: Recepção e cadastro de clientes e entrada de equipamentos e OS (com diagnóstico técnico protegido).
-- Gestão de Ordens de Serviço (OS):
-  - Abertura, consulta, atualização de status com linha do tempo de histórico e encerramento.
-  - Registro de diagnóstico técnico e valor final.
-- Gestão de Clientes e Equipamentos:
-  - Cadastro detalhado e vínculo direto entre clientes e equipamentos/máquinas.
-  -Exclusão com integridade referencial protegida.
-- Importação de Dados em Lote:
-  - Suporte a arquivos .csv e .xlsx.
-  - Mapeamento dinâmico de colunas, detecção de duplicidades e relatório de importação.
-- Dashboard e Métricas:
-  - Indicadores operacionais e controle de faturamento em tempo real.
-- Design & Usabilidade:
-  - Interface com tema Claro e Escuro.
-  - Ícones vetoriais modernos e inicialização em menos de 3 segundos.
-    
+- **Autenticação Segura & Controle de Acesso (RBAC):**
+  - Criptografia de senhas com `hashlib.scrypt` e salt criptográfico individual de 128 bits.
+  - **Gestor:** Acesso irrestrito (dashboard, painel financeiro, clientes, equipamentos, OS, importação, backup e gestão de colaboradores/empresa).
+  - **Técnico:** Acesso operacional focado em ordens de serviço, diagnósticos, laudos técnicos e equipamentos (com sigilo financeiro).
+  - **Atendente:** Recepção, cadastro de clientes, entrada de equipamentos e abertura de OS (com diagnóstico técnico e valores financeiros protegidos).
+- **Gestão de Ordens de Serviço (OS):**
+  - Abertura, consulta, filtros combinados, alertas automáticos para OS paradas (> 5 dias), atualização de status com linha do tempo imutável de auditoria e histórico de manutenções anteriores por equipamento.
+  - Discriminação de valores (Mão de Obra e Peças), forma de pagamento e emissão de **Comprovante de Entrada** e **Recibo / Laudo Técnico de Saída** em PDF.
+- **Painel Financeiro e Fechamento de Caixa:**
+  - Indicadores em tempo real (Faturamento Realizado, Receita Prevista, Ticket Médio e Mão de Obra), distribuição por forma de pagamento e exportação de relatórios gerenciais em **PDF** e **CSV (Excel)**.
+- **Gestão de Clientes e Equipamentos:**
+  - Cadastro detalhado com validação de CPF/CNPJ, telefone e e-mail, vínculo direto entre clientes e equipamentos e exclusão com integridade referencial protegida (`ON DELETE RESTRICT`).
+- **Importação de Dados em Lote:**
+  - Suporte a arquivos `.csv` (detecção automática de delimitador `;` ou `,`) e `.xlsx`.
+  - Mapeamento dinâmico de colunas, detecção de duplicidades e pré-visualização antes da gravação.
+- **Segurança de Dados e Backup:**
+  - Backup manual compactado (`.zip` com manifesto SHA-256) ou `.db`, backup rápido em 1 clique, restauração validada com snapshot preventivo e backup automático ao fechar o sistema.
+- **Design & Usabilidade:**
+  - Interface responsiva com tema Claro e Escuro (Frutiger Aero Design System), ícones vetoriais SVG e inicialização rápida em até 3 segundos.
 
-## Como executar o projeto
+---
+
+## Credenciais de Acesso (Ambiente de Demonstração)
+
+Na primeira execução, o sistema inicializa automaticamente o banco de dados `orby.db` com três perfis pré-configurados:
+
+| Perfil | Usuário | Senha | Permissões |
+|---|---|---|---|
+| **Gestor** | `admin` | `admin123` | Acesso completo a todas as funções, financeiro e configurações |
+| **Técnico** | `tecnico` | `tec123` | Edição de OS, diagnósticos técnicos e equipamentos |
+| **Atendente** | `atendente` | `atende123` | Cadastro de clientes, equipamentos e abertura de OS |
+
+> **Modo Produção:** Por padrão, o Modo Produção Comercial vem **ativado**, ocultando botões de preenchimento rápido na tela de login. O Gestor pode alternar essa opção a qualquer momento em **Configurações → Usuários & Acessos**.
+
+---
+
+## Como Executar o Projeto
 
 ### Pré-requisitos
-
-- Python 3.11 ou superior;
-- Gerenciador de pacotes `pip`;
-- Sistema operacional compatível com Python e PySide6.
+- **Python 3.11** ou superior
+- Gerenciador de pacotes `pip`
 
 ### 1. Clonar o repositório
-
-Substitua o endereço abaixo pela URL real do repositório:
-
 ```bash
-git clone https://github.com/luisa-moura/Orby-SO-Platform.git
+git clone https://github.com/Mat-Henrique-Santos/Orby.git
 cd Orby
 ```
 
-### 2. Criar e ativar um ambiente virtual
+### 2. Criar e ativar o ambiente virtual (recomendado)
 
-**Windows (PowerShell):**
-
+No Windows (PowerShell):
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-**Linux/macOS:**
-
+No Linux/macOS:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
 ### 3. Instalar as dependências
-
 ```bash
-python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
 ### 4. Executar a aplicação
-
-Na raiz do projeto, execute:
-
 ```bash
 python main.py
 ```
 
-No Windows, se o projeto já estiver configurado com o ambiente `orby_env`, também é possível iniciar a aplicação com:
+> **Nota:** O banco de dados SQLite (`orby.db`) é criado e populado automaticamente na primeira execução dentro do diretório de dados do usuário (`%APPDATA%/Orby/orby.db` no Windows ou `~/.orby/orby.db` no Linux/macOS), sem poluir a pasta do projeto.
+>
+> **Usuários Windows:** O executável portátil compilado (`Orby.exe`, que dispensa instalação do Python) está disponível diretamente na raiz do repositório [Mat-Henrique-Santos/Orby](https://github.com/Mat-Henrique-Santos/Orby) e na seção de [Releases](https://github.com/Mat-Henrique-Santos/Orby/releases).
 
-```powershell
-.\orby_env\Scripts\python.exe main.py
+---
+
+## Executando os Testes Automatizados
+
+A suíte possui **48 testes unitários e de integração** cobrindo autenticação (`scrypt` e migração legada), controle RBAC, persistência SQLite, regras de negócio, geração de PDFs/CSVs, rotinas de backup/restauração e importação de planilhas. Você pode executá-los com o `unittest` padrão ou com o `pytest`:
+
+**Via unittest nativo:**
+```bash
+python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-> **Importante:** execute o comando a partir da raiz do projeto, onde `main.py` e o pacote `orby` estão disponíveis. O ponto de entrada inicializa a interface Qt, prepara o banco de dados e o repositório e apresenta a tela de login.
+**Via pytest:**
+```bash
+pip install pytest
+python -m pytest
+```
 
-## Database
-
-Orby utiliza **SQLite**. O banco é inicializado automaticamente pela aplicação. De acordo com a configuração documentada no projeto, o arquivo `orby.db` é criado na pasta do projeto na primeira execução.
-
-O armazenamento contempla informações relacionadas a usuários, clientes, equipamentos, ordens de serviço e histórico de alterações de status.
-
-## Importação de clientes
-
-A ferramenta de importação aceita arquivos `.csv` e `.xlsx`. O fluxo inclui visualização prévia, mapeamento de colunas, validação dos dados, identificação de possíveis duplicidades, confirmação e relatório do resultado.
-
-O projeto inclui o arquivo [`clientes_teste_importacao.csv`](clientes_teste_importacao.csv) como exemplo para testes. Antes de confirmar uma importação, confira os dados e o mapeamento exibidos pela aplicação. Prefira utilizar informações fictícias durante a validação.
-
-
-## Testes e validação
-
-O material fornecido inclui um CSV de exemplo para validar o fluxo de importação. Para testes manuais, recomenda-se verificar:
-
-- inicialização da aplicação e acesso pela tela de login;
-- cadastro, edição e exclusão protegida de clientes;
-- associação entre clientes, equipamentos e ordens de serviço;
-- atualização de status e registro do histórico da OS;
-- importação de CSV/XLSX, incluindo validação e duplicidades;
-- apresentação dos indicadores do dashboard.
-
-  ### - Credenciais de Acesso (Ambiente de Testes)
-
-O sistema inicializa automaticamente o banco de dados `orby.db` com três perfis pré-configurados para validação:
-
-| **Perfil** | **Usuário** | **Senha** | **Permissões** |
-|:---|:---|:---|:---|
-| **Gestor** | `admin` | `admin123` | Acesso completo a todas as funções e métricas |
-| **Técnico** | `tecnico` | `tec123` | Edição de OS, diagnósticos e equipamentos |
-| **Atendente** | `atendente` | `atende123` | Cadastro de clientes, equipamentos e abertura de OS |
-
+---
 
 ## Estrutura do Projeto
 
 ```text
-.
 ├── orby/                         # Pacote principal da aplicação
-│   ├── core/                     # Componentes de domínio, conforme a versão do projeto
-│   ├── ui/                       # Interface gráfica e componentes visuais
-│   ├── database.py               # Inicialização e acesso ao banco de dados
-│   ├── importer.py               # Importação de dados
-│   ├── repository.py              # Acesso e persistência de dados
-│   └── main_window.py             # Janela principal
+│   ├── core/                     # Modelos de domínio, gerador PDF/CSV e motor de backup
+│   ├── ui/                       # Design System Frutiger Aero, diálogos, temas e ícones SVG
+│   ├── database.py               # Conexão SQLite, migrações e criptografia scrypt
+│   ├── importer.py               # Mecanismo de importação e validação CSV/XLSX
+│   ├── repository.py             # Camada de persistência, consultas analíticas e RBAC
+│   └── main_window.py            # Janela principal e fluxos operacionais do sistema
+├── tests/                        # Suíte com 48 testes automatizados
+├── clientes_teste_importacao.csv # Planilha de exemplo para teste de importação
 ├── main.py                       # Ponto de entrada da aplicação
-├── requirements.txt              # Dependências Python
-├── clientes_teste_importacao.csv # Dados de exemplo para importação
-├── Orby.spec                     # Configuração do PyInstaller
-├── Orby.exe                      # Executável para Windows
-├── orby.db                       # Banco de dados local (pode conter dados operacionais)
-└── README.md                     # Documentação do projeto
+├── Orby.exe                      # Executável portátil compilado para Windows
+├── Orby.spec                     # Especificação para empacotamento com PyInstaller
+├── requirements.txt              # Dependências do projeto (PySide6, openpyxl, reportlab)
+└── README.md                     # Documentação técnica do repositório
 ```
-
-A árvore apresenta os componentes principais referenciados pelos arquivos fornecidos. A estrutura exata pode variar entre versões; mantenha os diretórios e módulos existentes no repositório ao executar o projeto.
